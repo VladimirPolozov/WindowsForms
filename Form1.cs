@@ -1,65 +1,91 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WindowsForms
+namespace WindowsFormsLab
 {
-    public partial class Form1 : Form
+    public partial class Form1 : Form, ISynchronizationView
     {
+        string[] FolderPathInArray { get; set; }
+        string FirstDirectoryPath { get; set; }
+        string SecondDirectoryPath { get; set; }
+
+        public string GetFirstDirectoryPath() { return FirstDirectoryPath; }
+        public string GetSecondDirectoryPath() { return SecondDirectoryPath; }
+
+        public event EventHandler<EventArgs> SynchronizeFirstDirectoryWithSecondDirectoryEvent;
+        public event EventHandler<EventArgs> SynchronizeSecondDirectoryWithFirstDirectoryEvent;
+
         public Form1()
         {
             InitializeComponent();
+            SynchronizationPresenter programPresenter = new SynchronizationPresenter(this);
         }
 
-        private void splitContainer1_Panel2_Paint(object sender, PaintEventArgs e)
+        void ISynchronizationView.TrySynchronize(List<string> messages)
+        {
+            foreach (string message in messages)
+            {
+                LogChanges.Items.Add(message);
+            }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
         {
 
         }
 
-        private void splitContainer1_Panel1_Paint(object sender, PaintEventArgs e)
+        private void DirectoryOneLabel_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void splitContainer2_Panel1_Paint(object sender, PaintEventArgs e)
+        private void ChoiceDirectoryOneButton_Click_1(object sender, EventArgs inputEvent)
         {
+            if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+            {
+                FirstDirectoryPath = folderBrowserDialog.SelectedPath;
+                FolderPathInArray = FirstDirectoryPath.Split(new char[] { '\\' });
+                FirstDirectoryLabel.Text = FolderPathInArray[FolderPathInArray.Length - 1];
+                UpdateSynchronizeButtonsLabel();
+            }
+        }
+
+        private void ChoiceDirectoryTwoButton_Click_1(object sender, EventArgs inputEvent)
+        {
+            if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+            {
+                SecondDirectoryPath = folderBrowserDialog.SelectedPath;
+                FolderPathInArray = SecondDirectoryPath.Split(new char[] { '\\' });
+                DirectorySecondLabel.Text = FolderPathInArray[FolderPathInArray.Length - 1];
+                UpdateSynchronizeButtonsLabel();
+            }
 
         }
 
-        private void splitContainer1_Panel1_Paint_1(object sender, PaintEventArgs e)
+        private void UpdateSynchronizeButtonsLabel()
         {
-
+            if (FirstDirectoryLabel.Text != "Директория №1" && DirectorySecondLabel.Text != "Директория №2")
+            {
+                SynchronizeFirstDirectoryWithSecondDirectoryButton.Text = $"Обновить {FirstDirectoryLabel.Text} до соответствия с {DirectorySecondLabel.Text}";
+                SynchronizeSecondDirectoryWithFirstDirectoryButton.Text = $"Обновить {DirectorySecondLabel.Text} до соответствия с {FirstDirectoryLabel.Text}";
+            }
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private void SynchronizeFirstDirectoryWithSecondDirectoryButton_Click(object sender, EventArgs inputEvent)
         {
-
+            if (FirstDirectoryLabel.Text != "Директория №1" && DirectorySecondLabel.Text != "Директория №2")
+            {
+                SynchronizeFirstDirectoryWithSecondDirectoryEvent(sender, inputEvent);
+            }
         }
 
-        private void label1_Click(object sender, EventArgs e)
+        private void SynchronizeSecondDirectoryWithFirstDirectoryButton_Click(object sender, EventArgs inputEvent)
         {
-
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-
+            if (FirstDirectoryLabel.Text != "Директория №1" && DirectorySecondLabel.Text != "Директория №2")
+            {
+                SynchronizeSecondDirectoryWithFirstDirectoryEvent(sender, inputEvent);
+            }
         }
     }
 }
