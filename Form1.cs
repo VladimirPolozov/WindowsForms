@@ -6,12 +6,12 @@ namespace WindowsFormsLab
 {
     public partial class Form1 : Form, ISynchronizationView
     {
-        string[] FolderPathInArray { get; set; }
-        string FirstDirectoryPath { get; set; }
-        string SecondDirectoryPath { get; set; }
+        string[] folderPathInArray;
+        string firstDirectoryPath;
+        string secondDirectoryPath;
 
-        public string GetFirstDirectoryPath() { return FirstDirectoryPath; }
-        public string GetSecondDirectoryPath() { return SecondDirectoryPath; }
+        public string GetFirstDirectoryPath() { return firstDirectoryPath; }
+        public string GetSecondDirectoryPath() { return secondDirectoryPath; }
 
         public event EventHandler<EventArgs> SynchronizeFirstDirectoryWithSecondDirectoryEvent;
         public event EventHandler<EventArgs> SynchronizeSecondDirectoryWithFirstDirectoryEvent;
@@ -44,9 +44,9 @@ namespace WindowsFormsLab
         {
             if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
             {
-                FirstDirectoryPath = folderBrowserDialog.SelectedPath;
-                FolderPathInArray = FirstDirectoryPath.Split(new char[] { '\\' });
-                FirstDirectoryLabel.Text = FolderPathInArray[FolderPathInArray.Length - 1];
+                firstDirectoryPath = folderBrowserDialog.SelectedPath;
+                folderPathInArray = firstDirectoryPath.Split(new char[] { '\\' });
+                FirstDirectoryLabel.Text = folderPathInArray[folderPathInArray.Length - 1];
                 UpdateSynchronizeButtonsLabel();
             }
         }
@@ -55,9 +55,9 @@ namespace WindowsFormsLab
         {
             if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
             {
-                SecondDirectoryPath = folderBrowserDialog.SelectedPath;
-                FolderPathInArray = SecondDirectoryPath.Split(new char[] { '\\' });
-                DirectorySecondLabel.Text = FolderPathInArray[FolderPathInArray.Length - 1];
+                secondDirectoryPath = folderBrowserDialog.SelectedPath;
+                folderPathInArray = secondDirectoryPath.Split(new char[] { '\\' });
+                DirectorySecondLabel.Text = folderPathInArray[folderPathInArray.Length - 1];
                 UpdateSynchronizeButtonsLabel();
             }
 
