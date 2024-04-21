@@ -27,11 +27,16 @@ namespace WindowsFormsLab
             {
                 FileInfo targetDirectoryFile = new FileInfo(Path.Combine(targetDirectoryInfo.FullName, primaryDirectoryFile.Name));
 
-                if (!targetDirectoryFile.Exists || targetDirectoryFile.LastWriteTime < primaryDirectoryFile.LastWriteTime)
+                if (!targetDirectoryFile.Exists)
+                {
+                    File.Copy(primaryDirectoryFile.FullName, targetDirectoryFile.FullName, true);
+                    resultEntries.Add($"Файл {primaryDirectoryFile.Name} добавлен");
+                }
+                else if (targetDirectoryFile.LastWriteTime != primaryDirectoryFile.LastWriteTime)
                 {
                     File.Copy(primaryDirectoryFile.FullName, targetDirectoryFile.FullName, true);
                     resultEntries.Add($"Файл {primaryDirectoryFile.Name} изменен");
-                }
+                }                
             }
 
             foreach (FileInfo targetDirectoryFile in targetDirectoryInfo.GetFiles())
